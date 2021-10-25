@@ -1,5 +1,3 @@
-// Make attack less jancky
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,21 +7,24 @@ using UnityEngine;
 /// Controls anything involving the buildings
 /// </summary>
 public class BuildingBehaviour : MonoBehaviour {
-	public float health;
+	private float m_maxHealth;
+	public float m_health;
 
-	Color colour;
-	Renderer render;
+	Color m_colour;
+	Renderer m_render;
 
 	void Start() {
-		health = 100;
+		m_maxHealth = Random.Range(10, 75);
+		m_health = m_maxHealth * 10;
+		Debug.Log(gameObject.name + ": " + m_health);
 
-		render = gameObject.GetComponent<Renderer>();
-		render.material.color = Color.grey;
+		m_render = gameObject.GetComponent<Renderer>();
+		m_render.material.color = Color.grey;
 	}
 
 	void Update() {
 		// If the building has no health, it is destroyed
-		if (health <= 0) {
+		if (m_health <= 0) {
 			Destroy(gameObject);
 		}
 	}
@@ -33,11 +34,11 @@ public class BuildingBehaviour : MonoBehaviour {
 	/// </summary>
 	/// <param name="a_damage">Amount of health building loses</param>
 	public void TakeDamage(float a_damage) {
-		health -= a_damage;
-		Debug.Log(gameObject.name + ": " + health);
+		m_health -= a_damage;
+		Debug.Log(gameObject.name + ": " + m_health);
 
 		// Changes colour of building to show damage taken (whitebox only)
-		colour.r += (a_damage / 100);
-		render.material.color = colour;
+		m_colour.r += a_damage / (m_maxHealth * 10);
+		m_render.material.color = m_colour;
 	}
 }

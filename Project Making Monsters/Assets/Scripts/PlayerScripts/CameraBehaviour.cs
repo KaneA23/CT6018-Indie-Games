@@ -10,26 +10,22 @@ using UnityEngine;
 /// Controls where the camera is in relation to the player
 /// </summary>
 public class CameraBehaviour : MonoBehaviour {
-	public GameObject target;	// default: the player
-	Vector3 cameraOffset;		// Initial distance between player and camera
+	public GameObject m_target; // default: the player
+	Vector3 m_cameraOffset;     // Initial distance between player and camera
 
 	void Start() {
-		cameraOffset = target.transform.position - transform.position;
-	}
-
-	void Update() {
-
+		m_cameraOffset = m_target.transform.position - transform.position;
 	}
 
 	/// <summary>
 	/// Changes camera's angle and position so that it is always following right behind the player
 	/// </summary>
 	private void LateUpdate() {
-		float desiredCameraAngle = target.transform.eulerAngles.y;
+		float desiredCameraAngle = m_target.transform.eulerAngles.y;
 
 		Quaternion cameraRotation = Quaternion.Euler(0, desiredCameraAngle, 0);
-		transform.position = target.transform.position - (cameraRotation * cameraOffset);
+		transform.position = m_target.transform.position - (cameraRotation * m_cameraOffset);
 
-		transform.LookAt(target.transform);
+		transform.LookAt(m_target.transform);
 	}
 }
