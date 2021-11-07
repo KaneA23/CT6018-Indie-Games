@@ -14,8 +14,8 @@ public class BuildingBehaviour : MonoBehaviour {
 	Renderer m_render;
 
 	void Start() {
-		m_maxHealth = Random.Range(10, 75);
-		m_health = m_maxHealth * 10;
+		m_maxHealth = Random.Range(1000, 5000);
+		m_health = m_maxHealth;
 		Debug.Log(gameObject.name + ": " + m_health);
 
 		m_render = gameObject.GetComponent<Renderer>();
@@ -38,7 +38,7 @@ public class BuildingBehaviour : MonoBehaviour {
 		Debug.Log(gameObject.name + ": " + m_health);
 
 		// Changes colour of building to show damage taken (whitebox only)
-		m_colour.r += a_damage / (m_maxHealth * 10);
+		m_colour.r += a_damage / m_maxHealth;
 		m_render.material.color = m_colour;
 	}
 }

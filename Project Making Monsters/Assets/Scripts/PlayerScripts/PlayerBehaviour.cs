@@ -10,40 +10,75 @@ using UnityEngine;
 /// Controls the player's controls
 /// </summary>
 public class PlayerBehaviour : MonoBehaviour {
-	public float m_movementSpeed = 100;
-	public float m_turningSpeed = 150;
-	public bool m_isPunching;
-
 	BuildingBehaviour m_building;
 	Rigidbody m_rb;
 
-	void Start() {
+	// Movement variables
+	float m_vertical, m_horizontal;
+	public float m_movementSpeed = 100;
+	public float m_turningSpeed = 150;
+
+	// Attack variables
+	public bool m_isPunching;
+	public float m_attackStrength;
+
+	private void Awake() {
 		m_rb = GetComponent<Rigidbody>();
+	}
+
+	void Start() {
 		m_isPunching = false;
+
+		Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;
 	}
 
 	void Update() {
-		//
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			m_isPunching = true;
-			StartCoroutine(AttackRoutine());
-		}
+		PlayerInput();
 	}
 
 	/// <summary>
 	/// Allows for the player to be able to move the character
 	/// </summary>
 	private void FixedUpdate() {
-		// Controls the turning of that character
-		float horizontal = Input.GetAxis("Horizontal") * m_turningSpeed * Time.deltaTime;
+		Movement();
+	}
+
+	/// <summary>
+	/// Assigns all variables to an input value
+	/// </summary>
+	private void PlayerInput() {
+		m_horizontal = Input.GetAxisRaw("Horizontal");
+		m_vertical = Input.GetAxisRaw("Vertical");
+
+		if (Input.GetButton("Fire1")) {
+			m_isPunching = true;
+			m_attackStrength = 5;
+			StartCoroutine(AttackRoutine());
+		}
+
+		if (Input.GetButton("Fire2")) {
+			m_isPunching = true;
+			m_attackStrength = 10;
+			StartCoroutine(AttackRoutine());
+		}
+	}
+
+	/// <summary>
+	/// Allows the player to move forwards and backwards, dependent on direction player is facing
+	/// </summary>
+	private void Movement() {
+		// Changes the rotation of the character
+		float horizontal = m_horizontal * m_turningSpeed * Time.deltaTime;
 		transform.Rotate(0, horizontal, 0);
 
-		// Allows the player to move forwards and backwards, dependent on direction player is facing
-		float vertical = Input.GetAxis("Vertical");
-		if (vertical != 0) {
+		if (m_vertical != 0) {
+			Vector3 movement = m_movementSpeed * m_vertical * transform.forward;
+			//m_movement = m_movementSpeed * vertical;
 			//rb.velocity += movementSpeed * Time.deltaTime * vertical * transform.forward;
-			m_rb.AddForce(m_movementSpeed * vertical * transform.forward);
-		} else {
+			m_rb.AddForce(movement);
+			//m_rb.velocity = new Vector3(0, 0, m_movement);	// Moves on set axis
+		} else {    // Stops moving if player isn't clicking
 			m_rb.velocity = Vector3.zero;
 		}
 	}
@@ -56,7 +91,7 @@ public class PlayerBehaviour : MonoBehaviour {
 		if (m_isPunching) {
 			if (collision.gameObject.CompareTag("Building")) {
 				m_building = collision.gameObject.GetComponent<BuildingBehaviour>();
-				m_building.TakeDamage(10);
+				m_building.TakeDamage(m_attackStrength);
 				m_isPunching = false;
 			}
 		}
