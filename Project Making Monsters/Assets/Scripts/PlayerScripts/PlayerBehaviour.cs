@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 /// Controls the player's controls
 /// </summary>
@@ -13,12 +12,12 @@ public class PlayerBehaviour : MonoBehaviour {
 	BuildingBehaviour m_building;
 	Rigidbody m_rb;
 
-	// Movement variables
+	[Header("Movement")]
 	float m_vertical, m_horizontal;
 	public float m_movementSpeed = 100;
 	public float m_turningSpeed = 150;
 
-	// Attack variables
+	[Header("Attacks")]
 	public bool m_isPunching;
 	public float m_attackStrength;
 

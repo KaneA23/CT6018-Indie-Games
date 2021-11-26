@@ -5,13 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 /// Controls where the camera is in relation to the player
 /// </summary>
 public class CameraBehaviour : MonoBehaviour {
 	public GameObject m_target; // default: the player
-	Vector3 m_cameraOffset;     // Initial distance between player and camera
+	Vector3 m_cameraOffset;     // initial distance between player and camera
 
 	void Start() {
 		m_cameraOffset = m_target.transform.position - transform.position;
