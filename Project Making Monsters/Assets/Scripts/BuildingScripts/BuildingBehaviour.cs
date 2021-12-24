@@ -5,39 +5,55 @@ using UnityEngine;
 /// <summary>
 /// Controls anything involving the buildings
 /// </summary>
-public class BuildingBehaviour : MonoBehaviour {
-	private float m_maxHealth;
-	public float m_health;
+public class BuildingBehaviour : MonoBehaviour
+{
+    private float _maxHealth;
+    private float _health;
 
-	Color m_colour;
-	Renderer m_render;
+    Color colour;
 
-	void Start() {
-		m_maxHealth = Random.Range(1000, 5000);
-		m_health = m_maxHealth;
-		Debug.Log(gameObject.name + ": " + m_health);
+    Renderer render;
 
-		m_render = gameObject.GetComponent<Renderer>();
-		m_render.material.color = Color.grey;
-	}
+    /// <summary>
+    /// Gets the render component
+    /// </summary>
+    private void Awake()
+    {
+        render = gameObject.GetComponent<Renderer>();
+    }
 
-	void Update() {
-		// If the building has no health, it is destroyed
-		if (m_health <= 0) {
-			Destroy(gameObject);
-		}
-	}
+    /// <summary>
+    /// Assigns building's initial health
+    /// </summary>
+    void Start()
+    {
+        _maxHealth = Random.Range(1000, 2500);
+        _health = _maxHealth;
+        Debug.Log(gameObject.name + ": " + _health);
 
-	/// <summary>
-	/// Building takes damage dependent on strength of player's attack
-	/// </summary>
-	/// <param name="a_damage">Amount of health building loses</param>
-	public void TakeDamage(float a_damage) {
-		m_health -= a_damage;
-		Debug.Log(gameObject.name + ": " + m_health);
+        render.material.color = Color.grey;
+    }
 
-		// Changes colour of building to show damage taken (whitebox only)
-		m_colour.r += a_damage / m_maxHealth;
-		m_render.material.color = m_colour;
-	}
+    void Update()
+    {
+        // If the building has no health, it is destroyed
+        if (_health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Building takes damage dependent on strength of player's attack
+    /// </summary>
+    /// <param name="a_damage">Amount of health building loses</param>
+    public void TakeDamage(float a_damage)
+    {
+        _health -= a_damage;
+        Debug.Log(gameObject.name + ": " + _health);
+
+        // Changes colour of building to show damage taken (whitebox only)
+        colour.r += a_damage / _maxHealth;
+        render.material.color = colour;
+    }
 }
