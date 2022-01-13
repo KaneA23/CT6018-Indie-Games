@@ -15,12 +15,14 @@ public class PlayerBehaviour : MonoBehaviour
 
     // Movement variables
     private float _vertical, _horizontal;
-    private readonly float _movementSpeed = 100;
+    private readonly float _movementSpeed = 50;
     private readonly float _turningSpeed = 150;
 
     // Attack variables
     private bool _isPunching;
     private float _attackStrength;
+
+    public Joystick joystick;
 
     /// <summary>
     /// Get references to components
@@ -37,8 +39,8 @@ public class PlayerBehaviour : MonoBehaviour
     {
         _isPunching = false;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
     /// <summary>
@@ -62,22 +64,25 @@ public class PlayerBehaviour : MonoBehaviour
     /// </summary>
     private void PlayerInput()
     {
-        _horizontal = Input.GetAxisRaw("Horizontal");
-        _vertical = Input.GetAxisRaw("Vertical");
+        //_horizontal = Input.GetAxisRaw("Horizontal");
+        //_vertical = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetButton("Fire1"))
-        {
-            _isPunching = true;
-            _attackStrength = 5;
-            StartCoroutine(AttackRoutine());
-        }
+        _horizontal = joystick.Horizontal;
+        _vertical = joystick.Vertical;
 
-        if (Input.GetButton("Fire2"))
-        {
-            _isPunching = true;
-            _attackStrength = 10;
-            StartCoroutine(AttackRoutine());
-        }
+        //if (Input.GetButton("Fire1"))
+        //{
+        //    _isPunching = true;
+        //    _attackStrength = 5;
+        //    StartCoroutine(AttackRoutine());
+        //}
+
+        //if (Input.GetButton("Fire2"))
+        //{
+        //    _isPunching = true;
+        //    _attackStrength = 10;
+        //    StartCoroutine(AttackRoutine());
+        //}
     }
 
     /// <summary>
@@ -129,5 +134,19 @@ public class PlayerBehaviour : MonoBehaviour
         yield return new WaitForFixedUpdate();
 
         _isPunching = false;
+    }
+
+    public void Attack1()
+    {
+        _isPunching = true;
+        _attackStrength = Random.Range(10, 50);
+        StartCoroutine(AttackRoutine());
+    }
+
+    public void Attack2()
+    {
+        _isPunching = true;
+        _attackStrength = Random.Range(50, 100);
+        StartCoroutine(AttackRoutine());
     }
 }

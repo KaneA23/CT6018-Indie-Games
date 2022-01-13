@@ -14,12 +14,18 @@ public class BuildingBehaviour : MonoBehaviour
 
     Renderer render;
 
+    GameObject canvas;
+    ScoreSystem scoreSystem;
+
     /// <summary>
     /// Gets the render component
     /// </summary>
     private void Awake()
     {
         render = gameObject.GetComponent<Renderer>();
+        
+        canvas = GameObject.Find("Canvas");
+        scoreSystem = canvas.GetComponentInChildren<ScoreSystem>();
     }
 
     /// <summary>
@@ -40,6 +46,7 @@ public class BuildingBehaviour : MonoBehaviour
         if (_health <= 0)
         {
             Destroy(gameObject);
+            scoreSystem.ChangeScore(1000);
         }
     }
 
@@ -51,6 +58,7 @@ public class BuildingBehaviour : MonoBehaviour
     {
         _health -= a_damage;
         Debug.Log(gameObject.name + ": " + _health);
+        scoreSystem.ChangeScore((int)a_damage);
 
         // Changes colour of building to show damage taken (whitebox only)
         colour.r += a_damage / _maxHealth;
