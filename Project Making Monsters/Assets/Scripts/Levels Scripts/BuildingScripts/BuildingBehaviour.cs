@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class BuildingBehaviour : MonoBehaviour
 {
-    private float _maxHealth;
+    private int _maxHealth;
     private float _health;
 
     Color colour;
@@ -58,7 +58,7 @@ public class BuildingBehaviour : MonoBehaviour
     {
         _health -= a_damage;
         Debug.Log(gameObject.name + ": " + _health);
-        scoreSystem.ChangeScore((int)a_damage);
+        scoreSystem.ChangeScore(a_damage);
 
         // Changes colour of building to show damage taken (whitebox only)
         colour.r += a_damage / _maxHealth;

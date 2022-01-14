@@ -4,6 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Controls the player's controls
@@ -12,6 +13,8 @@ public class PlayerBehaviour : MonoBehaviour
 {
     BuildingBehaviour buildingScipt;
     Rigidbody rb;
+
+    public Joystick joystick;
 
     // Movement variables
     private float _vertical, _horizontal;
@@ -22,7 +25,8 @@ public class PlayerBehaviour : MonoBehaviour
     private bool _isPunching;
     private float _attackStrength;
 
-    public Joystick joystick;
+    [SerializeField]
+    Button heavyAttackButton;
 
     /// <summary>
     /// Get references to components
@@ -38,6 +42,9 @@ public class PlayerBehaviour : MonoBehaviour
     void Start()
     {
         _isPunching = false;
+
+        heavyAttackButton.interactable = false;
+        StartCoroutine(HeavyAttackCooldown(1));
 
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
@@ -73,14 +80,14 @@ public class PlayerBehaviour : MonoBehaviour
         //if (Input.GetButton("Fire1"))
         //{
         //    _isPunching = true;
-        //    _attackStrength = 5;
+        //    _attackStrength = Random.Range(10, 50);
         //    StartCoroutine(AttackRoutine());
         //}
 
         //if (Input.GetButton("Fire2"))
         //{
         //    _isPunching = true;
-        //    _attackStrength = 10;
+        //    _attackStrength = Random.Range(50, 100);
         //    StartCoroutine(AttackRoutine());
         //}
     }
@@ -94,7 +101,7 @@ public class PlayerBehaviour : MonoBehaviour
         float horizontal = _horizontal * _turningSpeed * Time.deltaTime;
         transform.Rotate(0, horizontal, 0);
 
-        if (_vertical != 0)
+        if (_vertical >= 0.2f)
         {
             Vector3 movement = _movementSpeed * _vertical * transform.forward;
             //m_movement = m_movementSpeed * vertical;
@@ -105,6 +112,8 @@ public class PlayerBehaviour : MonoBehaviour
         else
         {    // Stops moving if player isn't clicking
             rb.velocity = Vector3.zero;
+
+
         }
     }
 
@@ -126,6 +135,30 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     /// <summary>
+    /// Light Attack
+    /// </summary>
+    public void Attack1()
+    {
+        _isPunching = true;
+        _attackStrength = Random.Range(25, 75);
+
+        StartCoroutine(AttackRoutine());
+    }
+
+    /// <summary>
+    /// Heavy Attack
+    /// </summary>
+    public void Attack2()
+    {
+        _isPunching = true;
+        _attackStrength = Random.Range(100, 200);
+        StartCoroutine(AttackRoutine());
+
+        heavyAttackButton.interactable = false;
+        StartCoroutine(HeavyAttackCooldown(2));
+    }
+
+    /// <summary>
     /// Makes sure player isn't always punching
     /// </summary>
     /// <returns>When the next FixedUpdate is called, punch is made not active</returns>
@@ -136,17 +169,15 @@ public class PlayerBehaviour : MonoBehaviour
         _isPunching = false;
     }
 
-    public void Attack1()
+    /// <summary>
+    /// Cooldown for heavy attack
+    /// </summary>
+    /// <param name="a_cooldownTime">Attack cooldown dependent on abilities</param>
+    /// <returns></returns>
+    IEnumerator HeavyAttackCooldown(int a_cooldownTime)
     {
-        _isPunching = true;
-        _attackStrength = Random.Range(10, 50);
-        StartCoroutine(AttackRoutine());
-    }
+        yield return new WaitForSeconds(a_cooldownTime);
 
-    public void Attack2()
-    {
-        _isPunching = true;
-        _attackStrength = Random.Range(50, 100);
-        StartCoroutine(AttackRoutine());
+        heavyAttackButton.interactable = true;
     }
 }

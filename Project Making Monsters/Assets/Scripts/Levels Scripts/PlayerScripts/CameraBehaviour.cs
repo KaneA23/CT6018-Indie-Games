@@ -14,13 +14,16 @@ public class CameraBehaviour : MonoBehaviour
 
     Vector3 cameraOffset;       // initial distance between player and camera
 
+    private void Awake()
+    {
+        _target = GameObject.FindGameObjectWithTag("Player");
+    }
+
     /// <summary>
     /// Sets cameraOffset to follow player
     /// </summary>
     void Start()
     {
-        _target = GameObject.FindGameObjectWithTag("Player");
-
         cameraOffset = _target.transform.position - transform.position;
     }
 

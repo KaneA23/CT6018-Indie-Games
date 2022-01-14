@@ -6,7 +6,7 @@ using TMPro;
 
 public class ScoreSystem : MonoBehaviour
 {
-    public int score;
+    public float score;
 
     TextMeshProUGUI scoreText;
 
@@ -30,10 +30,14 @@ public class ScoreSystem : MonoBehaviour
 
     }
 
-    public void ChangeScore(int a_scoreIncrease)
+    /// <summary>
+    /// Increases player's score as they destroy more buildings
+    /// </summary>
+    /// <param name="a_scoreIncrease">Damage taken becomes score (+ bonus)</param>
+    public void ChangeScore(float a_scoreIncrease)
     {
         score += a_scoreIncrease;
-        scoreText.text = score.ToString();
+        scoreText.text = ((int)score).ToString();
 
         multiplierSlider.value = score / 100;
     }
