@@ -6,39 +6,98 @@ using TMPro;
 
 public class ScoreSystem : MonoBehaviour
 {
-    public float score;
+	public float score;
+	public int multiplier;
+	public int multiplierLvl;
 
-    TextMeshProUGUI scoreText;
+	public Slider multiplierSlider;
 
-    public Slider multiplierSlider;
+	TextMeshProUGUI scoreText;
 
-    private void Awake()
-    {
-        scoreText = GetComponent<TextMeshProUGUI>();
-    }
+	[SerializeField]
+	TextMeshProUGUI multiplierText;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        score = 0;
-        scoreText.text = score.ToString();
-    }
+	private void Awake()
+	{
+		scoreText = GetComponent<TextMeshProUGUI>();
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
+	// Start is called before the first frame update
+	void Start()
+	{
+		score = 0;
+		scoreText.text = score.ToString();
 
-    }
+		multiplierLvl = 1;
+		IncreaseMultiplier();
+	}
 
-    /// <summary>
-    /// Increases player's score as they destroy more buildings
-    /// </summary>
-    /// <param name="a_scoreIncrease">Damage taken becomes score (+ bonus)</param>
-    public void ChangeScore(float a_scoreIncrease)
-    {
-        score += a_scoreIncrease;
-        scoreText.text = ((int)score).ToString();
+	/// <summary>
+	/// Decreases the multiplier bar over time
+	/// </summary>
+	private void FixedUpdate()
+	{
+		multiplierSlider.value -= multiplier * Time.deltaTime;
+	}
 
-        multiplierSlider.value = score / 100;
-    }
+	/// <summary>
+	/// Increases player's score as they destroy more buildings
+	/// </summary>
+	/// <param name="a_scoreIncrease">Damage taken becomes score (+ bonus)</param>
+	public void ChangeScore(float a_scoreIncrease)
+	{
+		a_scoreIncrease *= multiplier;
+		score += a_scoreIncrease;
+		scoreText.text = ((int)score).ToString();
+
+		multiplierSlider.value += a_scoreIncrease / 100;
+
+		if (multiplierSlider.value >= multiplierSlider.maxValue && multiplierLvl < 7)
+		{
+			multiplierLvl++;
+			multiplierSlider.value = 0;
+
+			IncreaseMultiplier();
+		}
+	}
+
+	/// <summary>
+	/// Amount of damage and score is doubled when the bar is filled
+	/// </summary>
+	public void IncreaseMultiplier()
+	{
+		switch (multiplierLvl)
+		{
+			case 1:
+				multiplier = 1;
+				break;
+
+			case 2:
+				multiplier = 2;
+				break;
+
+			case 3:
+				multiplier = 4;
+				break;
+
+			case 4:
+				multiplier = 8;
+				break;
+
+			case 5:
+				multiplier = 16;
+				break;
+
+			case 6:
+				multiplier = 32;
+				break;
+
+			case 7:
+				multiplier = 64;
+				break;
+		}
+
+		multiplierSlider.maxValue *= multiplierLvl;
+		multiplierText.text = "x" + multiplier.ToString();
+	}
 }

@@ -11,7 +11,6 @@ public class BuildingBehaviour : MonoBehaviour
     private float _health;
 
     Color colour;
-
     Renderer render;
 
     GameObject canvas;
@@ -46,7 +45,7 @@ public class BuildingBehaviour : MonoBehaviour
         if (_health <= 0)
         {
             Destroy(gameObject);
-            scoreSystem.ChangeScore(1000);
+            scoreSystem.ChangeScore(1000 * scoreSystem.multiplier);
         }
     }
 
@@ -56,6 +55,7 @@ public class BuildingBehaviour : MonoBehaviour
     /// <param name="a_damage">Amount of health building loses</param>
     public void TakeDamage(float a_damage)
     {
+        a_damage *= 1 + (scoreSystem.multiplier / 100);
         _health -= a_damage;
         Debug.Log(gameObject.name + ": " + _health);
         scoreSystem.ChangeScore(a_damage);

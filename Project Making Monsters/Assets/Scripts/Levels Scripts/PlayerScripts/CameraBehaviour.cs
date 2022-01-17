@@ -1,4 +1,4 @@
-// Add code to allow freeview if Ctrl pressed (PC only)
+// Add code to allow freeview of character (that doesn't turn character)?
 
 
 using System.Collections;
